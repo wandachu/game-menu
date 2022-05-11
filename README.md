@@ -45,6 +45,7 @@ The game has a timer and the snake must eat a food before the timer runs out. Ot
 Use arrow keys to move the warehouse keeper (in green) to move the boxes (in yellow) to the target spots (in light blue)
 
 Currently, the game has two maps. Once the player completes one map, the next level is then unlocked. The user can press space to restart the current level.
+
 ![](https://github.com/wandachu/game-menu/blob/master/src/main/resources/sokoban.jpg)
 
 ## Tetris
