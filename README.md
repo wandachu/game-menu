@@ -2,6 +2,8 @@
 
 > Game menu includes a bundle of mini games. The menu allows users to type the specific game they would like to play, then display the game for the user.
 
+![](https://github.com/wandachu/game-menu/blob/master/src/main/resources/menu.jpg)
+
 ## Breakout
 Use arrow keys to move the paddle to hit the ball against the bricks and eliminate them. Once the player knocks down all bricks, a new game is displayed with one more layer of bricks.
 
