@@ -30,47 +30,53 @@ public class Skunk extends AbstractGame {
     public void act() {playAgain();}
   };
 
-
   private static int M, E, H; // define the state of the game (my point, enemy's point, hand point)
   private static boolean myTurn;
   private static int D1, D2; // two dice
   private static String skunkMsg;
-
+  private static String gameOverMsg;
 
   public Skunk() {
     super("Skunk");
-    skunkMsg = "";
     playAgain();
   }
 
   private static void playAgain() {
-    // set stage
+    setInitialStage();
+    chooseFirstPlayer();
+  }
+
+  private static void setInitialStage() {
     M = 0; E = 0; H = 0;
     PASS.enabled = true;
     ROLL.enabled = true;
+    skunkMsg = "";
+    gameOverMsg = "";
     D1 = 0; D2 = 0; // initialize to 0 to mark that the game has not started.
-
-    myTurn = G.rnd(2) == 0; // 0 or 1
-    if (!myTurn) {
-      PASS.enabled = false; // Archie must roll
-    }
     PASS.set(xM + 50, yM + 50); ROLL.set(xM + 100, yM + 50); AGAIN.set(-100, -100);
+  }
+
+  private static void chooseFirstPlayer() {
+    myTurn = G.rnd(2) == 0; // determine who's the first to go
+    if (!myTurn) {
+      PASS.enabled = false; // Archie must roll if he's the first to go
+    }
   }
 
   @Override
   public void paintComponent(Graphics g) {
     G.whiteBackground(g);
-    converge(1000000); // user a counter to count how much coverage is done and stop after 80 clicks
+    converge(1000000); // Archie gets better with time goes.
     if (showStrategy) {
       converge(100000);
       showAll(g);
     } else { // show game
       showRoll(g);
       showScore(g);
-      if (!gameoverMsg().equals("")) { // game should be over
+      if (!gameOverMsg.equals("")) { // game should be over
         G.whiteBackground(g);
         g.setColor(Color.BLACK);
-        g.drawString(gameoverMsg(), xM, yM);
+        g.drawString(gameOverMsg, xM, yM);
       }
       cmds.showAll(g); // must be after showRoll to show correct cmd stage
     }
@@ -83,17 +89,24 @@ public class Skunk extends AbstractGame {
   }
 
   private static void pass() {
-    if (myTurn) {M += H;} else {E += H;}
-    H = 0;
-    ROLL.enabled = true;
-    myTurn = !myTurn;
-    if (myTurn) {
-      PASS.enabled = true;
+    if (myTurn) { // update total score
+      M += H;
+    } else {
+      E += H;
     }
-    roll();
+    H = 0; // reset hand's score
+    ROLL.enabled = true;
+    if (isGameOver()) { // check if game should be over after this pass
+      gameOverMsg = (myTurn) ? "You WIN!!" : AIName + "'s win!";
+      gameover();
+    } else { // game continues
+      myTurn = !myTurn; // switch turn
+      if (myTurn) {
+        PASS.enabled = true;
+      }
+      roll();
+    }
   }
-
-
 
   private static void showRoll(Graphics g) {
     g.setColor(Color.BLACK);
@@ -109,15 +122,9 @@ public class Skunk extends AbstractGame {
     else {skunkMsg = ""; normalHand();}
   }
 
-  private static String gameoverMsg() {
-    String res = "";
-    int total = H + (myTurn ? M : E);
-
-    if (total >= WINNING_SCORE) {
-      res = (myTurn) ? "You WIN!!" : AIName + "'s win!";
-      gameover();
-    }
-    return res;
+  private static boolean isGameOver() {
+    int total = myTurn ? M : E;
+    return (total >= WINNING_SCORE);
   }
 
   private static void gameover() {
