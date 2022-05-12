@@ -13,8 +13,8 @@ import javax.swing.Timer;
 public class Destructo extends AbstractGame implements ActionListener {
   private static final int nR = 15, nC = 13; // number of rows and columns (rows are actually horizontal x)
   private static final int w = 50, h = 30;
-  private static int xM = 100, yM = 100;
-  private static Color[] color = {
+  private static int xM, yM;
+  private static final Color[] color = {
       Color.lightGray, // background color
       Color.cyan,
       Color.green,
@@ -31,6 +31,7 @@ public class Destructo extends AbstractGame implements ActionListener {
 
   public Destructo() {
     super("Destructo");
+    xM = 100; yM = 100;
     rndColors(3);
     timer = new Timer(30, this); // 30 is in milliseconds. 30 frames a second - a convenient number
     timer.start();
