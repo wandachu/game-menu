@@ -10,7 +10,9 @@ import java.awt.event.MouseEvent;
  * Skunk is a dice-rolling game allowing a user to play with the computer AI derived based on Markov chain.
  */
 public class Skunk extends AbstractGame {
+
   private static final String AIName = "Archie";
+  public static final int WINNING_SCORE = 100;
   private static final G.Button.List cmds = new G.Button.List();
   private static final int xM = 375, yM = 250;
   private static final G.Button PASS = new G.Button(cmds, "Pass") {
@@ -28,6 +30,7 @@ public class Skunk extends AbstractGame {
     public void act() {playAgain();}
   };
 
+
   private static int M, E, H; // define the state of the game (my point, enemy's point, hand point)
   private static boolean myTurn;
   private static int D1, D2; // two dice
@@ -39,10 +42,15 @@ public class Skunk extends AbstractGame {
   }
 
   private static void playAgain() {
+    // set stage
     M = 0; E = 0; H = 0;
+    PASS.enabled = true;
+    ROLL.enabled = true;
+    D1 = 0; D2 = 0; // initialize to 0 to mark that the game has not started.
+
     myTurn = G.rnd(2) == 0; // 0 or 1
     if (!myTurn) {
-      setAIButton(); // set button if the first round if AI's
+      PASS.enabled = false; // Archie must roll
     }
     PASS.set(xM + 50, yM + 50); ROLL.set(xM + 100, yM + 50); AGAIN.set(-100, -100);
   }
@@ -83,7 +91,8 @@ public class Skunk extends AbstractGame {
   private static String gameoverMsg() {
     String res = "";
     int total = H + (myTurn ? M : E);
-    if (total >= 100) {
+
+    if (total >= WINNING_SCORE) {
       res = (myTurn) ? "You WIN!!" : AIName + "'s win!";
       gameover();
     }

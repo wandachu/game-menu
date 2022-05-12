@@ -13,25 +13,41 @@ import graph.Window;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
 
 
 public class GameMenu extends Window {
 
   public static final int W = 1000;
   public static final int H = 800;
-  public static Color bkColor = new Color(200, 255, 200);
+  public static final String BACKGROUND_IMAGE_PATH = "src/main/resources/background.png";
   public static AbstractGame theGame = null;
-
-
-  public GameMenu() {
-    super("GameMenu", W, H);
-  }
+  public static Image i = loadImage();
 
   public static void main(String[] args) {
     Window.PANEL = new GameMenu();
     Window.launch();
+  }
+
+  private static Image loadImage() {
+    File input = new File(BACKGROUND_IMAGE_PATH.replaceAll("[/\\\\]", "\\" + File.separator));
+    Image i;
+    try {
+      i = ImageIO.read(input);
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return i;
+  }
+
+  public GameMenu() {
+    super("GameMenu", W, H);
   }
 
   public void paintComponent(Graphics g) {
@@ -39,13 +55,15 @@ public class GameMenu extends Window {
       theGame.paintComponent(g);
       return;
     }
-    g.setColor(bkColor);
-    g.fillRect(0, 0, 5000, 5000);
     g.setColor(Color.BLACK);
-    int x = 350, y = 200, increment = 25;
-    g.setFont(new Font("Verdana", Font.PLAIN, 20));
+    g.fillRect(0, 0, 5000, 5000);
+    g.drawImage(i, 0, 0, this);
+    g.setColor(Color.RED);
+    int x = 220, y = 100, increment = 35;
+    g.setFont(new Font("Impact", Font.PLAIN, 30));
     g.drawString("Games - Press escape to return to this menu", x, y); y += increment * 2;
-    g.setFont(new Font("Arial ", Font.PLAIN, 15));
+    g.setFont(new Font("Georgia", Font.PLAIN, 25));
+    x = 280;
     g.drawString("(B)reakout - Press B to play Breakout", x, y); y += increment;
     g.drawString("(D)estructo - Press D to play Destructo", x, y); y += increment;
     g.drawString("(E)xpressionEditor - Press E to play XEd", x, y); y += increment;
