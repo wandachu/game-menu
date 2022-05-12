@@ -61,7 +61,7 @@ public class GameMenu extends Window {
     g.setColor(Color.RED);
     int x = 220, y = 100, increment = 35;
     g.setFont(new Font("Impact", Font.PLAIN, 30));
-    g.drawString("Games - Press escape to return to this menu", x, y); y += increment * 2;
+    g.drawString("Games - Press escape to return to this menu", x, y); y += increment * 3 / 2;
     g.setFont(new Font("Georgia", Font.PLAIN, 25));
     x = 280;
     g.drawString("(B)reakout - Press B to play Breakout", x, y); y += increment;
