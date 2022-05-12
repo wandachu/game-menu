@@ -34,10 +34,12 @@ public class Skunk extends AbstractGame {
   private static int M, E, H; // define the state of the game (my point, enemy's point, hand point)
   private static boolean myTurn;
   private static int D1, D2; // two dice
+  private static String skunkMsg;
 
 
   public Skunk() {
     super("Skunk");
+    skunkMsg = "";
     playAgain();
   }
 
@@ -53,6 +55,25 @@ public class Skunk extends AbstractGame {
       PASS.enabled = false; // Archie must roll
     }
     PASS.set(xM + 50, yM + 50); ROLL.set(xM + 100, yM + 50); AGAIN.set(-100, -100);
+  }
+
+  @Override
+  public void paintComponent(Graphics g) {
+    G.whiteBackground(g);
+    converge(1000000); // user a counter to count how much coverage is done and stop after 80 clicks
+    if (showStrategy) {
+      converge(100000);
+      showAll(g);
+    } else { // show game
+      showRoll(g);
+      showScore(g);
+      if (!gameoverMsg().equals("")) { // game should be over
+        G.whiteBackground(g);
+        g.setColor(Color.BLACK);
+        g.drawString(gameoverMsg(), xM, yM);
+      }
+      cmds.showAll(g); // must be after showRoll to show correct cmd stage
+    }
   }
 
   private static void roll() {
@@ -72,7 +93,7 @@ public class Skunk extends AbstractGame {
     roll();
   }
 
-  private static String skunkMsg = "";
+
 
   private static void showRoll(Graphics g) {
     g.setColor(Color.BLACK);
@@ -83,8 +104,8 @@ public class Skunk extends AbstractGame {
 
   private static void analyzeDice() {
     PASS.enabled = true; ROLL.enabled = true; // enable both button after each roll
-    if (D1 == 1 && D2 == 1) {totalSkunked(); skunkMsg = "TOTALLY SKUNKED!";}
-    else if (D1 == 1 || D2 == 1) {skunked(); skunkMsg = "Skunked!";}
+    if (D1 == 1 && D2 == 1) {totalSkunked(); skunkMsg = " TOTALLY SKUNKED!";}
+    else if (D1 == 1 || D2 == 1) {skunked(); skunkMsg = " Skunked!";}
     else {skunkMsg = ""; normalHand();}
   }
 
@@ -112,25 +133,6 @@ public class Skunk extends AbstractGame {
   private static void showScore(Graphics g) {
     g.setColor(Color.BLACK);
     g.drawString(scoreString(), xM, yM + 40);
-  }
-
-  @Override
-  public void paintComponent(Graphics g) {
-    G.whiteBackground(g);
-    converge(1000000); // user a counter to count how much coverage is done and stop after 80 clicks
-    if (showStrategy) {
-      converge(100000);
-      showAll(g);
-    } else {
-      showRoll(g);
-      showScore(g);
-      if (!gameoverMsg().equals("")) { // game should be over
-        G.whiteBackground(g);
-        g.setColor(Color.BLACK);
-        g.drawString(gameoverMsg(), xM, yM);
-      }
-      cmds.showAll(g); // must be after showRoll to show correct cmd stage
-    }
   }
 
   private static void totalSkunked() {
